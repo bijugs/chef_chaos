@@ -44,7 +44,8 @@ ruby_block 'run-chaos-condition' do
   block do
     len = node['chef_chaos']['conditions'].length-1
     cond = rand(len)
-    cmd = node['chef_chaos']['conditions'][rand][1]
+    cmd = node['chef_chaos']['conditions'][cond][1]
+    Chef::Log.info("Running chaos condition -> '#{cmd}' ")
     c = Mixlib::ShellOut.new(cmd)
     c.run_command
   end

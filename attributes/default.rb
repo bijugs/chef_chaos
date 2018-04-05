@@ -17,6 +17,7 @@
 # limitations under the License.
 #
 default['chef_chaos']['conditions'] = [
-         ['Stress','stress-ng --matrix 1 -t 1m', true],
-         ['Stress','stress-ng --matrix 1 -t 2m', true]
+         ['service','service hbase-regionserver stop', true],
+         ['stress','stress-ng --matrix 1 -t 1m', true],
+         ['stress','stress-ng --matrix 1 -t 2m', true]
        ]
