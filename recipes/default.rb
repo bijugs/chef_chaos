@@ -16,6 +16,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+package "stress-ng" do
+  action :install
+end
 
 template "#{Chef::Config[:file_cache_path]}/cpu_burn.sh" do
   source "cpu_burn.sh.erb"
@@ -24,10 +27,26 @@ template "#{Chef::Config[:file_cache_path]}/cpu_burn.sh" do
   mode "0755"
 end
 
-bash 'Saturate_CPU' do
-  cwd "#{Chef::Config[:file_cache_path]}"
-  code <<-EOH
-    ./cpu_burn.sh
-  EOH
-  user 'root'
+#bash 'Saturate_CPU' do
+#  cwd "#{Chef::Config[:file_cache_path]}"
+#  code <<-EOH
+#    ./cpu_burn.sh
+#  EOH
+#  user 'root'
+#end
+
+#execute 'Stress' do
+#  command "/usr/bin/#{node['chef_chaos']['conditions']["#{node['chef_chaos']['conditions'].length}".length][1]}"
+#  user 'root'
+#end
+
+ruby_block 'run-chaos-condition' do
+  block do
+    len = node['chef_chaos']['conditions'].length-1
+    cond = rand(len)
+    cmd = node['chef_chaos']['conditions'][rand][1]
+    c = Mixlib::ShellOut.new(cmd)
+    c.run_command
+  end
+  action :run
 end
